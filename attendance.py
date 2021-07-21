@@ -7,6 +7,7 @@ import time
 import face_recognition
 import os
 import datetime
+import detect_mask_video
 
 
 def att():
@@ -70,6 +71,7 @@ def att():
             if True in results:  # If at least one is true, get a name of first of found labels
                 match=(known_names[results.index(True)])
                 print(f' - {match} from {results}')
+                print(match)
                 #print(face_location,'kkkk')
 
                 # Each location contains positions in order: top, right, bottom, left
@@ -79,7 +81,7 @@ def att():
 
 
                 # Paint frame
-                cv2.rectangle(image, top_left, bottom_right, (0,0,255), FRAME_THICKNESS)
+                cv2.rectangle(image, top_left, bottom_right, (0,255,0), FRAME_THICKNESS)
 
                 # Now we need smaller, filled grame below for a name
                 # This time we use bottom in both corners - to start from bottom and move 50 pixels down
@@ -87,7 +89,7 @@ def att():
                 bottom_right = (face_location[1], face_location[2] + 22)
 
                 # Paint frame
-                cv2.rectangle(image, top_left, bottom_right, ( 0,0,255), cv2.FILLED)
+                cv2.rectangle(image, top_left, bottom_right, ( 0,255,0), cv2.FILLED)
 
                 # Wite a name
                 cv2.putText(image, match, (face_location[3] + 10, face_location[2] + 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (200, 200, 200), FONT_THICKNESS)
@@ -109,23 +111,20 @@ def att():
                 # Wite a name
                 cv2.putText(image, 'Unknown', (face_location[3] + 10, face_location[2] + 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                             (200, 200, 200), FONT_THICKNESS)
-
         # Show image
-
         cv2.imshow('Camera', image)
-
         if cv2.waitKey(1) & 0xFF==ord('q'):
             break
-
-
     del(video)
     cv2.destroyAllWindows()
+
 
     if match==None:
         messagebox.showinfo(title="Surviellance Program", message="UNIDENTIFIED PERSON")
         return
-
-
+    else:
+        detect_mask_video.dm(match)
+    '''    
     window = Tk()
     window.geometry("500x490")
     window.title("SURVEILLANCE PROGRAM")
@@ -152,6 +151,7 @@ def att():
     label_title.place(x=85, y=1)
 
     '''
+    '''
     a = "C:\\Users\\Pragya.DESKTOP-3UL0L63\\PycharmProjects\\pythonProject\\known\\"+match+"0.png"
     global im
     im = Image.open(a)
@@ -165,7 +165,7 @@ def att():
     label1 = Label(window, bg='white', image=label_image, height=160, width=150)
     label1.place(x=160, y=40)
     '''
-
+    '''
     label_id = Label(window, text="Employee ID                - ", fg='black', bg='light blue',
                   font=('Times New Roman', 14))
     label_id.place(x=60, y=100)
@@ -224,6 +224,8 @@ def att():
 
     #attendance function
     def markyourattendance():
+        messagebox.showinfo(title="Surveillance Program", message="PLEASE CONFIRM THAT YOU WEAR A MASK!! THIS IS MANDATORY")
+        
         cursor.execute("insert into attendance(empid, empname, Date, Time, On_Time_or_Late)values(%s,%s,%s,%s,%s)",(emp_id,emp_name,date,time,h))
         conn.commit()
         messagebox.showinfo(title="Surviellance System",message="Attendance Marked")
@@ -232,4 +234,6 @@ def att():
     mark = Button(window, text='Mark Your Attendance', fg='black', bg='light blue', font=("Times New Roman", 12, 'bold'),
                             relief='raised', justify='center',command=markyourattendance)
     mark.place(x=160, y=360)
+    
     window.mainloop()
+    '''
